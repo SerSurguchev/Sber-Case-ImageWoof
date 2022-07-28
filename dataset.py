@@ -1,4 +1,3 @@
-%%writefile dataset.py
 from PIL import Image
 import torch
 import pandas as pd
