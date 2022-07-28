@@ -15,6 +15,10 @@ class Mish(nn.Module):
     def forward(self, x):
         return x * torch.tanh(torch.nn.functional.softplus(x))
 
+    
+# ========================= #
+#   GoogLeNet from scratch  #
+# ========================= #
 
 class BasicConv2d(nn.Module):
     def __init__(self, in_channels, out_channels, use_bn=True, **kwargs):
@@ -186,7 +190,9 @@ class GoogLeNet(nn.Module):
         else:
             return x
 
-
+# ================================== #
+#   ResNet50, 101, 152 from scratch  #
+# ================================== #
 
 class block(nn.Module):
     def __init__(
