@@ -1,4 +1,3 @@
-%%writefile config.py
 import torch
 
 CSV_FILE_DIR = '/kaggle/working/noisy_imagewoof.csv'

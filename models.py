@@ -1,4 +1,3 @@
-%%writefile models.py
 import torch
 import torch.nn as nn
 import torchvision.models as models
@@ -97,6 +96,9 @@ class InceptionAux(nn.Module):
 
 
 class GoogLeNet(nn.Module):
+    """
+    Main GoogLeNet class body
+    """
     def __init__(self, aux_logits=True, use_bn=True, num_classes=10):
         super(GoogLeNet, self).__init__()
         assert aux_logits == True or aux_logits == False
@@ -183,6 +185,7 @@ class GoogLeNet(nn.Module):
             return aux1, aux2, x
         else:
             return x
+
 
 
 class block(nn.Module):

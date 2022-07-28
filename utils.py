@@ -9,7 +9,7 @@ import config
 import numpy as np
 
 
-def save_plots(train_acc, valid_acc, train_loss, valid_loss, net_list):
+def save_plots(train_acc, valid_acc, train_loss, valid_loss, net_list, download=False):
     """
     Function to save the loss and accuracy plots to disk
     Parameters:
@@ -49,6 +49,10 @@ def save_plots(train_acc, valid_acc, train_loss, valid_loss, net_list):
     axes[1][1].legend()
     axes[1][1].set_title('Validation loss')
     fig.tight_layout()
+
+
+    if download:
+        fig.savefig('plots.png')
 
 
 class SaveBestModel:

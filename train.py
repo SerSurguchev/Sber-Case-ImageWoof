@@ -1,4 +1,3 @@
-%%writefile train.py
 import torch
 from tqdm.auto import tqdm
 import config

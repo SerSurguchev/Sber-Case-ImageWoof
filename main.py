@@ -1,4 +1,3 @@
-%%writefile main.py
 
 # Import from custom modules
 import config
