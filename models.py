@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 import torchvision.models as models
 
+
 class Mish(nn.Module):
     """
     Mish activation function is proposed in "Mish: A Self
@@ -15,6 +16,10 @@ class Mish(nn.Module):
     def forward(self, x):
         return x * torch.tanh(torch.nn.functional.softplus(x))
 
+
+# ========================= #
+#   GoogLeNet from scratch  #
+# ========================= #
 
 class BasicConv2d(nn.Module):
     def __init__(self, in_channels, out_channels, use_bn=True, **kwargs):
@@ -99,6 +104,7 @@ class GoogLeNet(nn.Module):
     """
     Main GoogLeNet class body
     """
+
     def __init__(self, aux_logits=True, use_bn=True, num_classes=10):
         super(GoogLeNet, self).__init__()
         assert aux_logits == True or aux_logits == False
@@ -187,6 +193,9 @@ class GoogLeNet(nn.Module):
             return x
 
 
+# ================================== #
+#   ResNet50, 101, 152 from scratch  #
+# ================================== #
 
 class block(nn.Module):
     def __init__(
