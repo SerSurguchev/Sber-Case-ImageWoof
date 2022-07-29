@@ -1,7 +1,16 @@
+from dataset import CreateDataset, dataset_transform
+import config
+import torch
+from tqdm import tqdm
 import io
 import torchvision.transforms as transforms
 from PIL import Image
 from flask import Flask, jsonify, request, render_template
+
+from torch.utils.data import (
+    Dataset,
+    DataLoader
+)
 
 def transform_image(image_bytes):
     my_transforms = transforms.Compose([transforms.Resize(255),
@@ -13,13 +22,28 @@ def transform_image(image_bytes):
     image = Image.open(io.BytesIO(image_bytes))
     return my_transforms(image).unsqueeze(0)
 
+def test(model, image):
+    """
+    Function to test the model
+    """
+    # Set model to evaluation mode
+    model.eval()
+    print('Testing...')
 
-def get_prediction(image_bytes):
-    tensor = transform_image(image_bytes=image_bytes)
-    outputs = model.forward(tensor)
-    _, y_hat = outputs.max(1)
-    predicted_idx = str(y_hat.item())
-    return imagenet_class_index[predicted_idx]
+    tensor = transform_image(image)
+    with torch.no_grad():
+
+            outputs = model(image)
+
+            _, preds = torch.max(outputs.data, 1)
+
+    return preds
+
+
+def get_predictions(model_path):
+
+    model_path.load_state_dict(checkpoint['model_state_dict'])
+
 
 app = Flask(__name__)
 
@@ -27,9 +51,11 @@ app = Flask(__name__)
 def about():
     return render_template('index.html')
 
+
 @app.route('/prediction')
 def prediction():
     return 'Welcome to prediction'
+
 
 if __name__ == '__main__':
     app.run(debug=True)
