@@ -13,6 +13,7 @@ from torch.utils.data import (
 )
 
 def transform_image(image_bytes):
+
     my_transforms = transforms.Compose([transforms.Resize(255),
                                         transforms.CenterCrop(224),
                                         transforms.ToTensor(),
@@ -30,7 +31,6 @@ def test(model, image):
     model.eval()
     print('Testing...')
 
-    tensor = transform_image(image)
     with torch.no_grad():
 
             outputs = model(image)
@@ -40,9 +40,10 @@ def test(model, image):
     return preds
 
 
-def get_predictions(model_path):
-
-    model_path.load_state_dict(checkpoint['model_state_dict'])
+def get_predictions(model):
+    model.load_state_dict(checkpoint['model_state_dict'])
+    tensor = transform_image(image)
+    preds = test(model, tensor)
 
 
 app = Flask(__name__)

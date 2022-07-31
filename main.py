@@ -1,4 +1,3 @@
-
 # Import from custom modules
 import config
 from utils import (
@@ -68,6 +67,7 @@ def main(model=ResNet50(img_channel=3, num_classes=10),
     save_best_model = SaveBestModel()
 
     for epoch in range(EPOCHS):
+
         print(f"[INFO]: Epoch {epoch + 1} of {EPOCHS}")
 
         train_epoch_loss, train_epoch_acc = train(model, train_loader,
