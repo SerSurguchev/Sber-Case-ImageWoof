@@ -14,12 +14,15 @@ from dataset import (
     dataset_transform
 )
 
-from models import (
-    ResNet50,
-    ResNet101,
+from googlenet_mobilenet import (
     GoogLeNet,
-    ResNet34,
-    ResNet18
+    MobileNetV2
+)
+
+from resnet_models import (
+    ResNet50,
+    ResNet18,
+    ResNet34
 )
 
 from train import train, validation
@@ -42,7 +45,6 @@ def main(model=ResNet50(img_channel=3, num_classes=10),
          file_name_to_save=config.BEST_MODEL,
          EPOCHS=config.EPOCHS
          ):
-
     create_train_val_csv(config.CSV_FILE_DIR)
 
     dataset_train = CreateDataset('imagewoof_train.csv', root_dir=config.ROOT_DIR,
@@ -67,7 +69,6 @@ def main(model=ResNet50(img_channel=3, num_classes=10),
     save_best_model = SaveBestModel()
 
     for epoch in range(EPOCHS):
-
         print(f"[INFO]: Epoch {epoch + 1} of {EPOCHS}")
 
         train_epoch_loss, train_epoch_acc = train(model, train_loader,
