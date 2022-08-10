@@ -1,3 +1,4 @@
+from flask import Flask, request, render_template
 from dataset import CreateDataset, dataset_transform
 import config
 import torch
@@ -5,15 +6,16 @@ from tqdm import tqdm
 import io
 import torchvision.transforms as transforms
 from PIL import Image
-from flask import Flask, jsonify, request, render_template
 
 from torch.utils.data import (
     Dataset,
     DataLoader
 )
 
-def transform_image(image_bytes):
+from resnet_models import ResNet18
 
+
+def transform_image(image_bytes):
     my_transforms = transforms.Compose([transforms.Resize(255),
                                         transforms.CenterCrop(224),
                                         transforms.ToTensor(),
@@ -23,30 +25,27 @@ def transform_image(image_bytes):
     image = Image.open(io.BytesIO(image_bytes))
     return my_transforms(image).unsqueeze(0)
 
-def test(model, image):
-    """
-    Function to test the model
-    """
-    # Set model to evaluation mode
+
+def get_predictions(model, checkpoint, image):
+    checkpoint = torch.load(checkpoint)
+
+    model.load_state_dict(checkpoint['model_state_dict'])
+
     model.eval()
     print('Testing...')
 
+    tensor = transform_image(image)
+
     with torch.no_grad():
+        outputs = model(tensor)
 
-            outputs = model(image)
-
-            _, preds = torch.max(outputs.data, 1)
+        _, preds = torch.max(outputs.data, 1)
 
     return preds
 
 
-def get_predictions(model):
-    model.load_state_dict(checkpoint['model_state_dict'])
-    tensor = transform_image(image)
-    preds = test(model, tensor)
-
-
 app = Flask(__name__)
+
 
 @app.route('/')
 def about():
@@ -55,7 +54,18 @@ def about():
 
 @app.route('/prediction')
 def prediction():
-    return 'Welcome to prediction'
+    file = request.files['file']
+    img_bytes = file.read()
+
+    pred = get_predictions(
+        model=ResNet18(pretrained=False,
+                       fine_tune=False,
+                       num_classes=10),
+        checkpoint='Resnet18_best.pth',
+        image=img_bytes
+    )
+
+    return render_template('prediction.html', data=pred)
 
 
 if __name__ == '__main__':
