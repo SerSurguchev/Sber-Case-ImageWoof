@@ -326,12 +326,6 @@ class MobileNetV2(nn.Module):
         x = self.classifier(x)
         return x
 
-    def forward(self, x):
-        x = self.features(x)
-        x = x.mean(3).mean(2)
-        x = self.classifier(x)
-        return x
-
     def _initialize_weights(self):
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
